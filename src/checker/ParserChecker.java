@@ -1,3 +1,7 @@
+package checker;
+
+import tools.Parser;
+
 import java.text.ParseException;
 
 public class ParserChecker {

@@ -1,3 +1,8 @@
+package checker;
+
+import tools.LexicalAnalyzer;
+import tools.Token;
+
 import java.text.ParseException;
 
 public class LexicalAnalyzerChecker {

@@ -1,3 +1,5 @@
+package tools;
+
 public enum Token {
     VARIABLE,
     OR_OPERATOR,
