@@ -1,20 +1,12 @@
-import java.io.InputStream;
 import java.text.ParseException;
 
 public class ParserChecker {
 
     public static void main(String[] args) {
-        InputStream inputStream = System.in;
-
         try {
-            LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer(inputStream);
-
-            while (lexicalAnalyzer.getCurrentToken() != Token.END) {
-                lexicalAnalyzer.nextToken();
-                System.out.println(lexicalAnalyzer.getCurrentToken());
-            }
+            new Parser().parse(System.in);
         } catch (ParseException e) {
-            System.err.printf("Parse error: " + e.getLocalizedMessage());
+            System.err.println("Parse error: " + e.getLocalizedMessage());
         }
     }
 }

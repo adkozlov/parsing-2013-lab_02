@@ -25,7 +25,8 @@ public class LexicalAnalyzer {
     }
 
     private boolean isBlank(int character) {
-        return character == ' ' || character == '\n' || character == '\t' || character == '\r';
+        return character == ' ';
+        //return character == ' ' || character == '\n' || character == '\t' || character == '\r';
     }
 
     private boolean isLetter(int character) {
