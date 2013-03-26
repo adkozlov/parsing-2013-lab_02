@@ -5,14 +5,23 @@ import java.util.List;
 
 public class Tree {
     private String node;
-    List<Tree> children;
+    private List<Tree> children;
 
     public Tree(String node) {
         this.node = node;
+        children = Arrays.asList();
     }
 
     public Tree(String node, Tree... children) {
         this.node = node;
         this.children = Arrays.asList(children);
+    }
+
+    public String getNode() {
+        return node;
+    }
+
+    public List<Tree> getChildren() {
+        return children;
     }
 }

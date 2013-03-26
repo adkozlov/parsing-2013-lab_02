@@ -28,6 +28,26 @@ public class Parser {
         }
     }
 
+    private Tree EPrime() throws ParseException {
+        switch (lexicalAnalyzer.getCurrentToken()) {
+            case OR_OPERATOR:
+                // |
+                lexicalAnalyzer.nextToken();
+                // A
+                Tree sub = A();
+                // E'
+                Tree cont = EPrime();
+
+                return new Tree("E'", new Tree("|"), sub, cont);
+            case RIGHT_PARENTHESIS:
+            case END:
+                // eps
+                return new Tree("E'");
+            default:
+                throw new AssertionError();
+        }
+    }
+
     private Tree A() throws ParseException {
         switch (lexicalAnalyzer.getCurrentToken()) {
             case VARIABLE:
@@ -145,26 +165,6 @@ public class Parser {
                 lexicalAnalyzer.nextToken();
 
                 return new Tree("D", new Tree("variable"));
-            default:
-                throw new AssertionError();
-        }
-    }
-
-    private Tree EPrime() throws ParseException {
-        switch (lexicalAnalyzer.getCurrentToken()) {
-            case OR_OPERATOR:
-                // |
-                lexicalAnalyzer.nextToken();
-                // A
-                Tree sub = A();
-                // E'
-                Tree cont = EPrime();
-
-                return new Tree("E'", new Tree("|"), sub, cont);
-            case RIGHT_PARENTHESIS:
-            case END:
-                // eps
-                return new Tree("E'");
             default:
                 throw new AssertionError();
         }

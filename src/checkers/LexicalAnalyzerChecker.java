@@ -1,15 +1,17 @@
-package checker;
+package checkers;
 
 import tools.LexicalAnalyzer;
 import tools.Token;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.text.ParseException;
 
 public class LexicalAnalyzerChecker {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         try {
-            LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer(System.in);
+            LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer(new FileInputStream("test.in"));
 
             while (lexicalAnalyzer.getCurrentToken() != Token.END) {
                 lexicalAnalyzer.nextToken();
