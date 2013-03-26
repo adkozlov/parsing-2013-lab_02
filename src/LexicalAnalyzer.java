@@ -61,11 +61,20 @@ public class LexicalAnalyzer {
                 currentToken = Token.RIGHT_PARENTHESIS;
                 break;
             case '|':
+                nextCharacter();
+                currentToken = Token.OR_OPERATOR;
+                break;
             case '^':
+                nextCharacter();
+                currentToken = Token.XOR_OPERATOR;
+                break;
             case '&':
+                nextCharacter();
+                currentToken = Token.AND_OPERATOR;
+                break;
             case '!':
                 nextCharacter();
-                currentToken = Token.OPERATOR;
+                currentToken = Token.NOT_OPERATOR;
                 break;
             case -1:
                 currentToken = Token.END;

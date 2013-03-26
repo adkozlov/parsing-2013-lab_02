@@ -1,6 +1,9 @@
 public enum Token {
     VARIABLE,
-    OPERATOR,
+    OR_OPERATOR,
+    XOR_OPERATOR,
+    AND_OPERATOR,
+    NOT_OPERATOR,
     LEFT_PARENTHESIS,
     RIGHT_PARENTHESIS,
     END
