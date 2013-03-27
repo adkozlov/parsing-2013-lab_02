@@ -4,7 +4,6 @@ import edu.uci.ics.jung.algorithms.layout.TreeLayout;
 import edu.uci.ics.jung.graph.DelegateForest;
 import edu.uci.ics.jung.graph.DirectedGraph;
 import edu.uci.ics.jung.graph.DirectedOrderedSparseMultigraph;
-import edu.uci.ics.jung.graph.Forest;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.decorators.EdgeShape;
@@ -22,87 +21,80 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 
-public class Visualizer {
+public class Visualizer implements Runnable {
 
-    public static void main(String[] args) throws FileNotFoundException {
+    private static final String FILENAME = "test.in";
+
+    public static void main(String[] args) {
+        new Thread(new Visualizer()).run();
+    }
+
+    private DirectedGraph<Vertex, Edge> graph = new DirectedOrderedSparseMultigraph<Vertex, Edge>();
+
+    @Override
+    public void run() {
         try {
-            visualize(new Parser().parse(new FileInputStream("test.in")));
+            Tree root = new Parser().parse(new FileInputStream(FILENAME));
+            visualize(root);
+
+            JFrame frame = new JFrame();
+            frame.getContentPane().add(new GraphZoomScrollPane(makeVisualizationViewer(new TreeLayout<Vertex, Edge>(new DelegateForest<Vertex, Edge>(graph)))));
+            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            frame.pack();
+            frame.setVisible(true);
         } catch (ParseException e) {
             System.err.printf("%s %d\n", e.getLocalizedMessage(), e.getErrorOffset());
+        } catch (FileNotFoundException e) {
+            System.err.printf(e.getLocalizedMessage());
         }
     }
 
-    private static boolean isNonTerm(String string) {
-        return ((int) string.charAt(0) >= 65 && (int) string.charAt(0) <= 90);
-    }
-
-    private static boolean isEps(String string) {
-        return (string.equals("eps"));
-    }
-
-    private static void convert(Vertex vertex, Tree tree, DirectedGraph<Vertex, Edge> graph) {
+    private void convert(Vertex root, Tree tree) {
         for (Tree child : tree.getChildren()) {
-            Vertex current = new Vertex(child.getNode());
-            graph.addEdge(new Edge("ok"), vertex, current);
-            convert(current, child, graph);
+            Vertex childVertex = new Vertex(child.getNode());
+            graph.addEdge(new Edge(), root, childVertex);
+            convert(childVertex, child);
         }
     }
 
-    public static void visualize(Tree tree) {
-        DirectedGraph<Vertex, Edge> graph = new DirectedOrderedSparseMultigraph<Vertex, Edge>();
-        Vertex root = new Vertex(tree.getNode());
-        convert(root, tree, graph);
-
-        Forest<Vertex, Edge> forest = new DelegateForest<Vertex, Edge>(graph);
-
-        TreeLayout<Vertex, Edge> treeLayout;
-        VisualizationViewer visualizationViewer;
-
-        treeLayout = new TreeLayout<Vertex, Edge>(forest);
-        visualizationViewer = new VisualizationViewer<Vertex, Edge>(
+    private VisualizationViewer<Vertex, Edge> makeVisualizationViewer(TreeLayout<Vertex, Edge> treeLayout) {
+        VisualizationViewer result = new VisualizationViewer<Vertex, Edge>(
                 treeLayout, new Dimension(1024, 768));
 
         // sets edges style
-        visualizationViewer.getRenderContext().setEdgeShapeTransformer(new EdgeShape.Line());
+        result.getRenderContext().setEdgeShapeTransformer(new EdgeShape.Line());
         // sets how to show cast Label to String
-        visualizationViewer.getRenderContext().setVertexLabelTransformer(new Transformer<Vertex, String>() {
+        result.getRenderContext().setVertexLabelTransformer(new Transformer<Vertex, String>() {
             public String transform(Vertex vertex) {
                 return vertex.toString();
             }
         });
         // sets edge thickness
-        visualizationViewer.getRenderContext().setEdgeStrokeTransformer(new ConstantTransformer<Stroke>(new BasicStroke(3f)));
+        result.getRenderContext().setEdgeStrokeTransformer(new ConstantTransformer<Stroke>(new BasicStroke(3f)));
         // sets position of Label
-        visualizationViewer.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
+        result.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
         // sets vertex color
-        visualizationViewer.getRenderContext().setVertexFillPaintTransformer(new Transformer<Vertex, Paint>() {
+        result.getRenderContext().setVertexFillPaintTransformer(new Transformer<Vertex, Paint>() {
             public Paint transform(Vertex vertex) {
-                String child = vertex.toString();
-                if (isNonTerm(child)) {
-                    return Color.GREEN;
-                } else if (isEps(child)) {
-                    return Color.white;
-                } else {
-                    return Color.RED;
-                }
+                return vertex.isTerminal() ? Color.WHITE : Color.LIGHT_GRAY;
             }
         });
 
         // sets vertex size
         Ellipse2D circle = new Ellipse2D.Double(-15, -15, 30, 30);
-        visualizationViewer.getRenderContext().setVertexShapeTransformer(new ConstantTransformer<Shape>(circle));
+        result.getRenderContext().setVertexShapeTransformer(new ConstantTransformer<Shape>(circle));
 
-        visualizationViewer.setVertexToolTipTransformer(new ToStringLabeller());
-        visualizationViewer.getRenderContext().setArrowFillPaintTransformer(new ConstantTransformer<Paint>(Color.lightGray));
+        result.setVertexToolTipTransformer(new ToStringLabeller());
+        result.getRenderContext().setArrowFillPaintTransformer(new ConstantTransformer<Paint>(Color.WHITE));
 
-        JFrame frame = new JFrame();
+        return result;
+    }
 
-        GraphZoomScrollPane panel = new GraphZoomScrollPane(visualizationViewer);
-        frame.getContentPane().add(panel);
+    public void visualize(Tree tree) {
+        Vertex root = new Vertex(tree.getNode());
+        convert(root, tree);
 
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
+
     }
 }
 
