@@ -5,6 +5,12 @@ import java.io.InputStream;
 import java.text.ParseException;
 
 public class LexicalAnalyzer {
+    final private static String EXCEPTION_FORMAT_STRING = "Illegal character '%c' at position";
+
+    private ParseException makeParseException() {
+        return new ParseException(String.format(EXCEPTION_FORMAT_STRING, (int) currentCharacter), currentPosition);
+    }
+
     private InputStream inputStream;
     private int currentCharacter;
     private int currentPosition;
@@ -83,7 +89,7 @@ public class LexicalAnalyzer {
                 currentToken = Token.END;
                 break;
             default:
-                throw new ParseException("Illegal character " + (char) currentCharacter, currentPosition);
+                throw makeParseException();
         }
     }
 }

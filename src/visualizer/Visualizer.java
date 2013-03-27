@@ -28,7 +28,7 @@ public class Visualizer {
         try {
             visualize(new Parser().parse(new FileInputStream("test.in")));
         } catch (ParseException e) {
-            System.err.println(e.getLocalizedMessage());
+            System.err.printf("%s %d\n", e.getLocalizedMessage(), e.getErrorOffset());
         }
     }
 
@@ -67,7 +67,7 @@ public class Visualizer {
         // sets how to show cast Label to String
         visualizationViewer.getRenderContext().setVertexLabelTransformer(new Transformer<Vertex, String>() {
             public String transform(Vertex vertex) {
-                return ("" + vertex);
+                return vertex.toString();
             }
         });
         // sets edge thickness
@@ -77,7 +77,7 @@ public class Visualizer {
         // sets vertex color
         visualizationViewer.getRenderContext().setVertexFillPaintTransformer(new Transformer<Vertex, Paint>() {
             public Paint transform(Vertex vertex) {
-                String child = "" + vertex;
+                String child = vertex.toString();
                 if (isNonTerm(child)) {
                     return Color.GREEN;
                 } else if (isEps(child)) {
