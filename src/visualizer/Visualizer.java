@@ -78,7 +78,7 @@ public class Visualizer implements Runnable {
         });
         context.setVertexFillPaintTransformer(new Transformer<Vertex, Paint>() {
             public Paint transform(Vertex vertex) {
-                return vertex.isTerminal() ? Color.WHITE : Color.LIGHT_GRAY;
+                return vertex.isTerminal() ? Color.LIGHT_GRAY : (vertex.isEpsilon() ? Color.GRAY : Color.WHITE);
             }
         });
         result.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);

@@ -9,7 +9,11 @@ public class Vertex {
 
     public boolean isTerminal() {
         char c = name.charAt(0);
-        return c >= 'A' && c <= 'Z';
+        return c != 'ε' && (c < 'A' || c > 'Z');
+    }
+
+    public boolean isEpsilon() {
+        return name.charAt(0) == 'ε';
     }
 
     @Override
