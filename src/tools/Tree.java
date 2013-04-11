@@ -7,6 +7,7 @@ public class Tree {
     private String node;
     private List<Tree> children;
 
+    @Deprecated
     public Tree(String node) {
         this.node = node;
         children = Arrays.asList();
