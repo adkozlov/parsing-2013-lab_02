@@ -17,7 +17,6 @@ public class Parser {
     }});
 
     final private static String EXCEPTION_STRING = "expected at position";
-    final private static String EPSILON_STRING = "ε";
 
     private String makeExceptionString(Token... tokens) {
         String s = "";
@@ -99,7 +98,7 @@ public class Parser {
                 checkIfRightParenthesis(Token.OR_OPERATOR, Token.END);
 
                 // eps
-                return new Tree(name, new Tree(EPSILON_STRING));
+                return new Tree(name);
             default:
                 throw makeParseException(Token.OR_OPERATOR, Token.RIGHT_PARENTHESIS, Token.END);
         }
@@ -145,7 +144,7 @@ public class Parser {
                 checkIfRightParenthesis(Token.XOR_OPERATOR, Token.OR_OPERATOR, Token.END);
 
                 // eps
-                return new Tree(name, new Tree(EPSILON_STRING));
+                return new Tree(name);
             default:
                 throw makeParseException(Token.XOR_OPERATOR, Token.OR_OPERATOR, Token.RIGHT_PARENTHESIS, Token.END);
         }
@@ -192,7 +191,7 @@ public class Parser {
                 checkIfRightParenthesis(Token.AND_OPERATOR, Token.XOR_OPERATOR, Token.OR_OPERATOR, Token.END);
 
                 // eps
-                return new Tree(name, new Tree(EPSILON_STRING));
+                return new Tree(name);
             default:
                 throw makeParseException(Token.AND_OPERATOR, Token.XOR_OPERATOR, Token.OR_OPERATOR, Token.RIGHT_PARENTHESIS, Token.END);
         }

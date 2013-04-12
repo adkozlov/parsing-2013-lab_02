@@ -64,7 +64,7 @@ public class Visualizer implements Runnable {
         RenderContext context = result.getRenderContext();
 
         // edges style
-        context.setEdgeShapeTransformer(new EdgeShape.QuadCurve<Vertex, Edge>());
+        context.setEdgeShapeTransformer(new EdgeShape.Line<Vertex, Edge>());
         context.setEdgeStrokeTransformer(new ConstantTransformer<Stroke>(new BasicStroke(2f)));
         context.setArrowFillPaintTransformer(new ConstantTransformer<Paint>(Color.BLACK));
 
@@ -78,7 +78,7 @@ public class Visualizer implements Runnable {
         });
         context.setVertexFillPaintTransformer(new Transformer<Vertex, Paint>() {
             public Paint transform(Vertex vertex) {
-                return vertex.isTerminal() ? Color.LIGHT_GRAY : (vertex.isEpsilon() ? Color.GRAY : Color.WHITE);
+                return vertex.isTerminal() ? Color.LIGHT_GRAY : Color.WHITE;
             }
         });
         result.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
